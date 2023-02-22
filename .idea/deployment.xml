@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="远程主机 (b2cd06a6-6cc8-4814-8fd1-66dab63527be)" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="远程主机 (4e0aecb9-491b-4663-b544-c9a06fd582cc)">
     <serverData>
-      <paths name="远程主机 (b2cd06a6-6cc8-4814-8fd1-66dab63527be)">
+      <paths name="远程主机 (4e0aecb9-491b-4663-b544-c9a06fd582cc)">
         <serverdata>
           <mappings>
             <mapping deploy="/tmp/linux-base" local="$PROJECT_DIR$" />
@@ -13,5 +13,6 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
