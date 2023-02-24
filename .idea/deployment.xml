@@ -5,9 +5,10 @@
       <paths name="远程主机 (f10a2d52-d1da-426d-b202-893a2eec6fa4)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.6loXm219IW" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/yoshiki/share/linux-base" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
           </excludedPaths>
         </serverdata>
