@@ -81,12 +81,6 @@ static void *threadCallback (void *arg)
 
         struct Task *task = worker->threadPool->task;
         DELETE_LIST(task, worker->threadPool->task);
-        // {
-        //     if ((task)->prev != ((void *)0))(task)->prev->next = (task)->next;
-        //     if ((task)->next != ((void *)0))(task)->next->prev = (task)->prev;
-        //     if ((task) == (worker->threadPool->task))(worker->threadPool->task) = (task)->next;
-        //     (task)->prev = (task)->next = ((void *)0);
-        // }
 
         pthread_mutex_unlock(&worker->threadPool->mutex);
 
@@ -157,6 +151,7 @@ int pushTaskThreadPool (struct ThreadPool *threadPool, struct Task *task)
     // 唤醒一个线程处理任务
     pthread_cond_signal(&threadPool->cond);
     pthread_mutex_unlock(&threadPool->mutex);
+    return 0;
 }
 
 #if 1
