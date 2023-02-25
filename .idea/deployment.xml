@@ -5,7 +5,7 @@
       <paths name="远程主机 (4e0aecb9-491b-4663-b544-c9a06fd582cc)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/linux-base" local="$PROJECT_DIR$" />
+            <mapping deploy="/share/linux-base" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
