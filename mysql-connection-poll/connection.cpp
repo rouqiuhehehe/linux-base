@@ -48,5 +48,5 @@ void Connection::refreshAliveTime ()
 }
 clock_t Connection::getAliveTime ()
 {
-    return d->aliveTime;
+    return clock() - d->aliveTime;
 }

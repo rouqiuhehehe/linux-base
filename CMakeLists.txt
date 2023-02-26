@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(linux-base)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_subdirectory(mysql-connection-poll)
 

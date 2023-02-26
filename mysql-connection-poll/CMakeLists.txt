@@ -1,6 +1,15 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
+set(TARGET_NAME "test-connection-poll")
+#此处打开为测试连接池
+#关闭则编译成静态库
+option(TEST "test-connection-poll" ON)
 
 aux_source_directory(. SOURCE_SRC)
-add_executable(test-connection-poll ${SOURCE_SRC})
-target_include_directories(test-connection-poll PUBLIC /usr/include/mysql)
-target_link_libraries(test-connection-poll mysqlclient)
+if (TEST)
+    add_definitions(-DTEST)
+    add_executable(${TARGET_NAME} ${SOURCE_SRC})
+else ()
+    add_library(${TARGET_NAME} STATIC ${SOURCE_SRC})
+endif ()
+target_include_directories(${TARGET_NAME} PUBLIC /usr/include/mysql)
+target_link_libraries(${TARGET_NAME} mysqlclient pthread)

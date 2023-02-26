@@ -7,8 +7,10 @@
 #include <string>
 #include <mysql.h>
 #include <ctime>
-class Connection
+#include "noncopyable.h"
+class Connection : public NonCopyAble
 {
+    friend class ConnectionPool;
 public:
     typedef unsigned short port_t;
     Connection ();
