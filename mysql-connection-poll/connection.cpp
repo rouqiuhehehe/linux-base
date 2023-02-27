@@ -12,7 +12,7 @@ public:
         mysql_close(db);
         delete db;
     }
-    MYSQL *db;
+    MYSQL *db = nullptr;
     // 进入空闲状态的起始时间
     clock_t aliveTime;
 };

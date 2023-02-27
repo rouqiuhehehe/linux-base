@@ -21,8 +21,12 @@ class ConnectionPool : public NonCopyAble
 public:
     using port_t = Connection::port_t;
     using Lock = std::unique_lock <std::mutex>;
+
+    ~ConnectionPool ();
     // 单例模式
     static ConnectionPool *createConnectionPool ();
+    // 因为db信息可能创建后设置，所以需要提供一个接口
+    bool run ();
     // 外部接口，提供一个空闲连接
     // 用智能指针，否则还需定义一个归还方法
     std::shared_ptr <Connection> getConnection ();

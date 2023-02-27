@@ -8,6 +8,7 @@
 #include <atomic>
 #include <thread>
 #include "error.h"
+#include <iostream>
 class ConnectionPool::ConnectionPoolPrivate
 {
 public:
@@ -24,7 +25,7 @@ public:
     // 连接池最大连接数量
     int maxSize = 1024;
     // 连接池最大等待空闲
-    int maxIdleTime = 60 * 1000;
+    int maxIdleTime = 1000 * 60;
     // 获取连接的最大超时时间，如果超过当前时间还没有空闲连接，则getConnection返回空指针
     int maxConnectionTimeout = 100;
     // 记录所有的连接数
@@ -38,12 +39,50 @@ public:
     Error error;
 };
 
+ConnectionPool::~ConnectionPool ()
+{
+    auto *connection = d->connectionQueue.front();
+
+    while (!d->connectionQueue.empty())
+    {
+        d->connectionQueue.pop();
+        delete connection;
+        d->connectionCount--;
+
+        connection = d->connectionQueue.front();
+    }
+
+    delete d;
+}
 ConnectionPool *ConnectionPool::createConnectionPool ()
 {
     // 懒汉式单例，c++11后线程安全
     // static 是全局变量，所有线程共享
     static ConnectionPool connectionPool;
     return &connectionPool;
+}
+bool ConnectionPool::run ()
+{
+    if (ip().empty() || username().empty() || password().empty()
+        || dbname().empty())
+    {
+        d->error
+         .setError(
+             "init info error,please check ip,username,password,dbname,port"
+         );
+        return false;
+    }
+
+    for (int i = 0; i < d->initSize; ++i)
+        createConnection();
+
+    std::thread produce(&ConnectionPool::produceConnectionTask, this);
+    std::thread scanner(&ConnectionPool::scannerConnectionTask, this);
+
+    produce.detach();
+    scanner.detach();
+
+    return true;
 }
 std::shared_ptr <Connection> ConnectionPool::getConnection ()
 {
@@ -93,24 +132,6 @@ bool ConnectionPool::testConnectionPoolHasConnection (Lock &lock)
 ConnectionPool::ConnectionPool ()
     : d(new ConnectionPoolPrivate)
 {
-    if (ip().empty() || username().empty() || password().empty()
-        || dbname().empty())
-    {
-        d->error
-         .setError(
-             "init info error,please check ip,username,password,dbname,port"
-         );
-        return;
-    }
-
-    for (int i = 0; i < d->initSize; ++i)
-        createConnection();
-
-    std::thread produce(&ConnectionPool::produceConnectionTask, this);
-    std::thread scanner(&ConnectionPool::scannerConnectionTask, this);
-
-    produce.detach();
-    scanner.detach();
 }
 [[noreturn]] void ConnectionPool::produceConnectionTask ()
 {
@@ -122,7 +143,6 @@ ConnectionPool::ConnectionPool ()
 
         if (d->connectionCount < d->maxSize)
             createConnection();
-
         // 如果创建成功，或者此时有连接还回连接池时，通知消费者可以消费了
         if (!d->connectionQueue.empty())
             d->cond.notify_all();
@@ -147,6 +167,7 @@ ConnectionPool::ConnectionPool ()
                 d->connectionQueue.pop();
                 delete connection;
                 d->connectionCount--;
+                std::cout << d->connectionCount << std::endl;
             }
             else break; // 如果队列头无超时，其他的肯定也不会超时
         }
