@@ -57,7 +57,7 @@ int httpCreateSocket (const char *ip, in_port_t port)
         return -2;
 
     // 设置非阻塞io
-    fcntl(socketFd, F_GETFL, O_NONBLOCK);
+    fcntl(socketFd, F_SETFL, O_NONBLOCK);
 
     return socketFd;
 }
