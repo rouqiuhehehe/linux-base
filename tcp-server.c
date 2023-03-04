@@ -37,13 +37,16 @@ int tcpCreateServer (int port)
     sockaddrIn.sin_port = htons(port);
     sockaddrIn.sin_family = AF_INET;
     sockaddrIn.sin_addr.s_addr = INADDR_ANY;
-    int ret = bind(sockfd,
+    int ret = bind(
+        sockfd,
         (const struct sockaddr *)&sockaddrIn,
         sizeof(struct sockaddr));
     CHECK_RET(ret, bind, -3);
 
     ret = listen(sockfd, 5);
     CHECK_RET(ret, listen, -4);
+
+    printf("tcp server running : %d\n", port);
 
     int epfd = epoll_create(1);
     struct epoll_event epollEvent[1024] = {};
@@ -52,13 +55,18 @@ int tcpCreateServer (int port)
     event.events = EPOLLIN;
     event.data.fd = sockfd;
     epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &event);
+    static int count = 0;
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1)
     {
         int nready = epoll_wait(epfd, epollEvent, 1024, 5);
-        if (nready == -1) continue;
+        if (nready == -1)
+        {
+            perror("");
+            continue;
+        }
 
         for (int i = 0; i < nready; ++i)
         {
@@ -100,14 +108,15 @@ int tcpCreateServer (int port)
                 {
                     close(ret);
                     event.data.fd = ret;
-                    event.events = EPOLLIN;
-                    epoll_ctl(epfd, EPOLL_CTL_DEL, sockfd, &event);
+                    event.events = EPOLLIN | EPOLLET;
+                    epoll_ctl(epfd, EPOLL_CTL_DEL, ret, &event);
+                    count--;
                 }
                 else
                 {
-                    printf("%s\n", message);
-                    free(message);
+                    printf("第%d个连接,%s\n", count++, message);
                 }
+                free(message);
             }
         }
     }
