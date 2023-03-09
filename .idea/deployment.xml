@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always">
+  <component name="PublishConfigData" autoUpload="Always" serverName="远程开发">
     <serverData>
       <paths name="远程主机 (f10a2d52-d1da-426d-b202-893a2eec6fa4)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/linux-base" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/tmp.kHPa3NqunH" local="$PROJECT_DIR$" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

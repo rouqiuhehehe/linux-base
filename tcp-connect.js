@@ -1,12 +1,10 @@
-const net = require("net");
+const childrenProcess = require("child_process");
 
-// for (let i = 0; i < 60000; i++) {
-//     console.log("ddddd------");
-//     new Promise((resolve) => resolve()).then(() => {
-//         const client = net.connect(3000, "192.168.19.128", (socket) => {
-//             client.write("hello");
-//             console.log(i);
-//         });
-//     });
-// }
-console.dir(net);
+const maxProcess = 3;
+const maxClient = 999999;
+const processMaxClient = maxClient / maxProcess;
+for (let i = 0; i < 3; i++) {
+    childrenProcess.fork("./tcp-connect-children-process.js", [processMaxClient, i], {
+        silent: false
+    });
+}
