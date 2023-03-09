@@ -3,6 +3,7 @@ project(linux-base)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_subdirectory(mysql-connection-poll)
+add_subdirectory(bloom-filter)
 
 file(GLOB SOURCE_FILE "*.c" "*.cpp")
 
